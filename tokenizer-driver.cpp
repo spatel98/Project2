@@ -9,17 +9,30 @@
 #include <iostream>
 #include <string>
 #include "storytokenizer.h"
+#include <fstream>
 using namespace std;
 
 int main()
 {
   string line, story;
 
-  getline(cin, line);
-  while (cin && line != "</html>")
+  ifstream input;
+
+  input.open("if2.html");
+
+  if (!input.is_open())
+  {
+	  cout << "Could not open if.html";
+	  return 1;
+  }
+
+
+  
+  getline(input, line);
+  while (input && line != "</html>")
   {
     story += line + '\n';
-    getline(cin, line);
+    getline(input, line);
   }
 
   StoryTokenizer st(story);
@@ -34,8 +47,6 @@ int main()
     while (pt.hasNextSection())
     {
 
-		cout << "Hello";
-
       SectionToken stok = pt.nextSection();
       switch (stok.getType())
       {
@@ -43,8 +54,11 @@ int main()
         cout << "  Link:  ";
         break;
       case SET:
-        cout << "  Set:  ";
-        break;
+	  {
+		  cout << "  Set:  ";
+		  
+		  break;
+	  }
       case GOTO:
         cout << "  Go-to:  ";
         break;
