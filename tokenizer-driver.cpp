@@ -33,6 +33,9 @@ int main()
     PassageTokenizer pt(ptok.getText());
     while (pt.hasNextSection())
     {
+
+		cout << "Hello";
+
       SectionToken stok = pt.nextSection();
       switch (stok.getType())
       {
