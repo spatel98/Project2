@@ -22,3 +22,14 @@ PassageToken::PassageToken(string str){
 string PassageToken::getText() const{
 	return text;
 }
+
+string PassageToken::getName() const
+{
+	int s = getText().find("name=\"")+6;
+	
+	int e = getText().find("\" ", s);
+
+	
+
+	return getText().substr(s,e-s);
+}

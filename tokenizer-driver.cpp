@@ -10,6 +10,8 @@
 #include <string>
 #include "storytokenizer.h"
 #include <fstream>
+#include <unordered_map>
+#include <map>
 using namespace std;
 
 int main()
@@ -26,14 +28,17 @@ int main()
 	  return 1;
   }
 
-
-  
   getline(input, line);
   while (input && line != "</html>")
   {
     story += line + '\n';
     getline(input, line);
   }
+  unordered_map<string, bool> sets;
+
+  unordered_map<string, PassageToken> passages;
+
+  string firstPassage;
 
   StoryTokenizer st(story);
   int pass = 0;
@@ -41,7 +46,12 @@ int main()
   {
     PassageToken ptok = st.nextPassage();
     pass++;
-    cout << "Passage " << pass << ":  " << endl;
+    cout << "Passage " << pass << ":  " << ptok.getName() <<endl;
+
+	passages.emplace(ptok.getName(), ptok);
+
+	if (pass == 1)
+		firstPassage = ptok.getName();
 
     PassageTokenizer pt(ptok.getText());
     while (pt.hasNextSection())
@@ -56,7 +66,24 @@ int main()
       case SET:
 	  {
 		  cout << "  Set:  ";
+
+		  string name = stok.getText().substr(6, stok.getText().find(' ',6) - 6);
+
+		  int f = stok.getText().find("true");
+
+		  bool c;
 		  
+		  if (f != string::npos)
+		  {
+			  c = true;
+		  }
+		  else
+		  {
+			  c = false;
+		  }
+
+		  sets.emplace(name, c);
+
 		  break;
 	  }
       case GOTO:
@@ -83,6 +110,24 @@ int main()
       cout << stok.getText() << endl;
     }
 
+  }
+
+  PassageToken current = passages.at(firstPassage);
+
+  PassageTokenizer t = PassageTokenizer(current.getText());
+
+  while (t.hasNextSection())
+  {
+	  SectionToken s = t.nextSection();
+
+
+  }
+
+
+
+  for (auto it = passages.begin(); it != passages.end(); ++it)
+  {
+	  cout << it->first << "  " << it->second.getName() << endl;
   }
 
   while (true);

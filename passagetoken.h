@@ -16,6 +16,7 @@ class PassageToken{
 		PassageToken();
 		PassageToken(string str);
 		string getText() const;
+		string getName() const; /*Added*/
 
 	protected:
 		string text;
